@@ -61,6 +61,13 @@
       margin: 15px 0;
       font-size: 14px;
     }
+    input[type="number"] {
+      padding: 10px;
+      width: 80%;
+      margin-top: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
     button {
       background: #ff9800;
       color: white;
@@ -68,6 +75,7 @@
       font-size: 16px;
       border: none;
       border-radius: 8px;
+      margin-top: 10px;
       cursor: pointer;
     }
     #walletAddress, #bnbBalance {
@@ -102,6 +110,10 @@
   <button onclick="connectWallet()">Connect Wallet</button>
   <div id="walletAddress"></div>
   <div id="bnbBalance"></div>
+
+  <input type="number" id="bnbAmount" placeholder="Enter BNB amount" step="0.01" min="0.01" />
+  <button onclick="sendBNB()">Buy HACHI</button>
+  <div id="status"></div>
 </div>
 
 <footer>
@@ -110,6 +122,7 @@
 
 <script>
   let web3;
+  let userAddress;
 
   async function connectWallet() {
     if (window.ethereum) {
@@ -117,11 +130,10 @@
         await window.ethereum.request({ method: 'eth_requestAccounts' });
         web3 = new Web3(window.ethereum);
         const accounts = await web3.eth.getAccounts();
-        const address = accounts[0];
-        document.getElementById('walletAddress').innerText = 'Connected: ' + address;
+        userAddress = accounts[0];
+        document.getElementById('walletAddress').innerText = 'Connected: ' + userAddress;
 
-        // Fetch and display BNB balance
-        const balanceWei = await web3.eth.getBalance(address);
+        const balanceWei = await web3.eth.getBalance(userAddress);
         const balanceBNB = web3.utils.fromWei(balanceWei, 'ether');
         document.getElementById('bnbBalance').innerText = 'BNB Balance: ' + parseFloat(balanceBNB).toFixed(4);
       } catch (error) {
@@ -129,6 +141,31 @@
       }
     } else {
       document.getElementById('walletAddress').innerText = 'MetaMask not detected. Use a MetaMask-enabled browser.';
+    }
+  }
+
+  async function sendBNB() {
+    const amount = document.getElementById('bnbAmount').value;
+    const status = document.getElementById('status');
+    if (!web3 || !userAddress) {
+      status.innerText = 'Please connect your wallet first.';
+      return;
+    }
+    if (!amount || amount <= 0) {
+      status.innerText = 'Enter a valid BNB amount.';
+      return;
+    }
+    const toAddress = "0xA92ce9b93230Bb812C9e6179a4791816e6Dd0650";
+    const amountWei = web3.utils.toWei(amount, 'ether');
+    try {
+      await web3.eth.sendTransaction({
+        from: userAddress,
+        to: toAddress,
+        value: amountWei
+      });
+      status.innerText = 'Transaction sent successfully!';
+    } catch (error) {
+      status.innerText = 'Transaction failed or cancelled.';
     }
   }
 </script>
