@@ -68,7 +68,7 @@
       border-radius: 8px;
       border: 1px solid #ccc;
     }
-    button {
+    button, .claim-btn {
       background: #ff9800;
       color: white;
       padding: 12px 20px;
@@ -77,6 +77,8 @@
       border-radius: 8px;
       margin-top: 10px;
       cursor: pointer;
+      display: inline-block;
+      text-decoration: none;
     }
     #walletAddress {
       margin-top: 15px;
@@ -129,6 +131,8 @@
   <button onclick="sendBNB()">Buy HACHI</button>
   <div id="status"></div>
   <div id="metaMaskNotice">MetaMask not detected. Please open this site inside the MetaMask app browser for full functionality.</div>
+
+  <a href="claim_hachiko.html" class="claim-btn">Claim $HACHI</a>
 </div>
 
 <footer>
