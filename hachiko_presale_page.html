@@ -89,6 +89,15 @@
       color: #666;
       display: none;
     }
+    #metaMaskNotice {
+      background: #fff3cd;
+      padding: 12px;
+      margin-top: 20px;
+      border-radius: 8px;
+      color: #b45309;
+      font-size: 14px;
+      display: none;
+    }
     footer {
       text-align: center;
       padding: 20px;
@@ -116,10 +125,10 @@
   <button onclick="connectWallet()">Connect Wallet</button>
   <div id="walletAddress"></div>
   <div id="bnbBalance">BNB Balance: Hidden until soft cap is reached.</div>
-
   <input type="number" id="bnbAmount" placeholder="Enter BNB amount" step="0.01" min="0.01" />
   <button onclick="sendBNB()">Buy HACHI</button>
   <div id="status"></div>
+  <div id="metaMaskNotice">MetaMask not detected. Please open this site inside the MetaMask app browser for full functionality.</div>
 </div>
 
 <footer>
@@ -138,13 +147,12 @@
         const accounts = await web3.eth.getAccounts();
         userAddress = accounts[0];
         document.getElementById('walletAddress').innerText = 'Connected: ' + userAddress;
-        // Hide actual balance until you hit soft cap
         document.getElementById('bnbBalance').style.display = 'block';
       } catch (error) {
         document.getElementById('walletAddress').innerText = 'Connection failed.';
       }
     } else {
-      document.getElementById('walletAddress').innerText = 'MetaMask not detected. Use a MetaMask-enabled browser.';
+      document.getElementById('metaMaskNotice').style.display = 'block';
     }
   }
 
