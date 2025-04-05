@@ -61,7 +61,7 @@
       margin: 15px 0;
       font-size: 14px;
     }
-    #connectButton {
+    button {
       background: #ff9800;
       color: white;
       padding: 12px 20px;
@@ -70,7 +70,7 @@
       border-radius: 8px;
       cursor: pointer;
     }
-    #walletAddress {
+    #walletAddress, #bnbBalance {
       margin-top: 15px;
       font-size: 14px;
       color: #2e7d32;
@@ -99,8 +99,9 @@
   <p>Send BNB to the wallet below to participate:</p>
   <div class="wallet">0xA92ce9b93230Bb812C9e6179a4791816e6Dd0650</div>
 
-  <button id="connectButton">Connect Wallet</button>
+  <button onclick="connectWallet()">Connect Wallet</button>
   <div id="walletAddress"></div>
+  <div id="bnbBalance"></div>
 </div>
 
 <footer>
@@ -108,23 +109,28 @@
 </footer>
 
 <script>
-  const connectButton = document.getElementById('connectButton');
-  const walletAddress = document.getElementById('walletAddress');
+  let web3;
 
   async function connectWallet() {
     if (window.ethereum) {
       try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        walletAddress.innerText = 'Connected: ' + accounts[0];
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        web3 = new Web3(window.ethereum);
+        const accounts = await web3.eth.getAccounts();
+        const address = accounts[0];
+        document.getElementById('walletAddress').innerText = 'Connected: ' + address;
+
+        // Fetch and display BNB balance
+        const balanceWei = await web3.eth.getBalance(address);
+        const balanceBNB = web3.utils.fromWei(balanceWei, 'ether');
+        document.getElementById('bnbBalance').innerText = 'BNB Balance: ' + parseFloat(balanceBNB).toFixed(4);
       } catch (error) {
-        walletAddress.innerText = 'Connection failed.';
+        document.getElementById('walletAddress').innerText = 'Connection failed.';
       }
     } else {
-      walletAddress.innerText = 'MetaMask not detected. Use MetaMask-enabled browser.';
+      document.getElementById('walletAddress').innerText = 'MetaMask not detected. Use a MetaMask-enabled browser.';
     }
   }
-
-  connectButton.addEventListener('click', connectWallet);
 </script>
 
 </body>
