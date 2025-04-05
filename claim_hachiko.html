@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Claim $HACHI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fffaf1;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      background: #fffde7;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    h1 {
+      color: #d17b00;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 16px;
+      color: #444;
+    }
+    button {
+      background: #ff9800;
+      color: white;
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    #walletAddress {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #2e7d32;
+    }
+    #claimStatus {
+      margin-top: 20px;
+      font-size: 15px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Claim Your $HACHI</h1>
+  <p>Connect your wallet to check claim status.</p>
+  <button onclick="connectWallet()">Connect Wallet</button>
+  <div id="walletAddress"></div>
+  <div id="claimStatus">Claiming will be available after presale ends.</div>
+</div>
+
+<script>
+  let web3;
+  let userAddress;
+
+  async function connectWallet() {
+    if (window.ethereum) {
+      try {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        web3 = new Web3(window.ethereum);
+        const accounts = await web3.eth.getAccounts();
+        userAddress = accounts[0];
+        document.getElementById('walletAddress').innerText = 'Connected: ' + userAddress;
+        document.getElementById('claimStatus').innerText = 'Claim not available yet. Please check after presale ends.';
+      } catch (error) {
+        document.getElementById('walletAddress').innerText = 'Connection failed.';
+      }
+    } else {
+      document.getElementById('walletAddress').innerText = 'MetaMask not detected. Please open in MetaMask browser.';
+    }
+  }
+</script>
+
+</body>
+</html>
