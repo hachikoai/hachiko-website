@@ -78,10 +78,16 @@
       margin-top: 10px;
       cursor: pointer;
     }
-    #walletAddress, #bnbBalance {
+    #walletAddress {
       margin-top: 15px;
       font-size: 14px;
       color: #2e7d32;
+    }
+    #bnbBalance, #status {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #666;
+      display: none;
     }
     footer {
       text-align: center;
@@ -109,7 +115,7 @@
 
   <button onclick="connectWallet()">Connect Wallet</button>
   <div id="walletAddress"></div>
-  <div id="bnbBalance"></div>
+  <div id="bnbBalance">BNB Balance: Hidden until soft cap is reached.</div>
 
   <input type="number" id="bnbAmount" placeholder="Enter BNB amount" step="0.01" min="0.01" />
   <button onclick="sendBNB()">Buy HACHI</button>
@@ -132,10 +138,8 @@
         const accounts = await web3.eth.getAccounts();
         userAddress = accounts[0];
         document.getElementById('walletAddress').innerText = 'Connected: ' + userAddress;
-
-        const balanceWei = await web3.eth.getBalance(userAddress);
-        const balanceBNB = web3.utils.fromWei(balanceWei, 'ether');
-        document.getElementById('bnbBalance').innerText = 'BNB Balance: ' + parseFloat(balanceBNB).toFixed(4);
+        // Hide actual balance until you hit soft cap
+        document.getElementById('bnbBalance').style.display = 'block';
       } catch (error) {
         document.getElementById('walletAddress').innerText = 'Connection failed.';
       }
